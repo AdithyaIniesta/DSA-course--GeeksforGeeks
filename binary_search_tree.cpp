@@ -1,92 +1,130 @@
 #include <bits/stdc++.h>
 
-struct Node{
-    int value;
-    struct Node* left;
-    struct Node* right;
-
-    Node(int key){
-        value = key;
-        left = NULL;
-        right = NULL;
-    }
+class Node{
+    public:
+        int value;
+        struct Node* left;
+        struct Node* right;
+        
+        Node(int value){
+            value = value;
+            left = NULL;
+            right = NULL;
+        }
 };
 
-Node* insert(Node* root, int key){
-    if(root == NULL){
-        return new Node(key);
+class binarySearchTree{
+  public:
+    bool searchIterative(Node* root, int key);
+    bool searchRecursive(Node* root, int key);
+    
+    Node* insertIterative(Node* root, int key);
+    Node* insertRecursive(Node* root, int key);
+};
+
+// search operation iterative method
+bool binarySearchTree::searchIterative(Node* root, int key){
+    while(root!=NULL){
+        std::cout << root->value;
+        if(root->value == key){
+            return true;
+        }
+        else if(root->value > key){
+            root = root->left;
+        }
+        else if(root->value < key){
+            root = root->right;
+        }
+    }
+    return false;
+}
+
+// serach operation recursive method
+bool binarySearchTree::searchRecursive(Node* root, int key){
+    if(root!=NULL){
+        return false;
     }
     else{
         if(root->value == key){
-            return root;
+            return true;
         }
         else if(root->value > key){
-            root->left = insert(root->left, key);
+            searchRecursive(root->left, key);
         }
         else{
-            root->right = insert(root->right, key);
+            searchRecursive(root->right, key);
         }
     }
 }
 
-Node* constructBST(Node* root, std::vector<int> T){
-    std::vector<int>::iterator it;
-    for (it = T.begin(); it != T.end() ; it++){
-        root = insert(root, it);
+// insert operation iterative method
+Node* binarySearchTree::insertIterative(Node* root, int key){
+    
+    if(root == NULL){
+        root = new Node(key);
+    }
+    else{
+        Node* curr, parent;
+        curr = root;
+        
+        while(curr != NULL){
+            parent = curr;
+            if(curr->value == key){
+                break;
+            }
+            else if(curr->value > key){
+                curr = curr->left;
+            }
+            else(curr->value < key){
+                curr = curr->right;
+            }
+        }
+        curr = new Node(key);
+        if(parent->value > curr->value){
+            parent->left = curr;
+        }
+        else(parent->value < curr->value){
+            parent->right = curr;
+        }
     }
     return root;
 }
 
-std::vector<int> inOrder(Node* root){
-    std::vector<int> v1;
-    if (root == NULL){
-        return v1;
+
+// insert operation recursive
+Node* binarySearchTree::insertRecursive(Node* root, int key){
+    if(root == NULL){
+        root = new Node(key);
     }
     else{
-        std::vector<int> v2;
-        v2 = inOrder(root->left);
-        v1.insert(v1.end(), v2.begin(), v2.begin());
-        v1.push_back(root->value);
-        v2 = inOrder(root->right);
-        v1.insert(v1.end(), v2.start(), v2.end());
-        return v1;
+        if(root->value == key){
+            return;
+        }
+        else if(root>value > key){
+            root->left = insertRecursive(root, key);
+        }
+        else{
+            root->right = insertRecursive(root, key);
+        }
     }
+    return root;
 }
 
-std::vector<int> mergeTwoBST(Node* root1, Node* root2){
-    if(root1 == NULL && root2 !=  NULL){
-        return inOrder(root2);
-    }
-    else if(root1 != NULL && root2 ==  NULL){
-        return inOrder(root1);
-    }
-    else{
-        std::vector<int> v1 = inOrder(root1);
-        std::vector<int> v2 = inOrder(root2);
-        v1.insert(v1.end(), v2.begin(), v2.end());
-        sort(v1.begin(), v1.end());
-        return v1;
-    }
-}
-
-void printVector(std::vector<int> v){
-    std::vector<int>::iterator it;
-    for(it = v.begin();it != v.end(); it++){
-        std::cout << *it <<"\t";
-    }
-    std::cout<<"\n";
-}
-
-
-int main(){
-    std::vector<int> v1{1,2,5,3,6,4};
-    std::vector<int> v2{9,5,6,4,2,10,15};
-    std::vector<int> v3;
-
-    Node* root_of_bst1, root_of_bst2;
-    root_of_bst1 = constructBST(root_of_bst1, v1);
-    root_of_bst2 = constructBST(root_of_bst1, v2);
-    v3 = mergeTwoBST(root_of_bst1, root_of_bst2);
-    printVector(v3);
-    return 0;
+int main() {
+	
+	Node *root=new Node(15);
+	root->left=new Node(5);
+	root->left->left=new Node(3);
+	root->right=new Node(20);
+	root->right->left=new Node(18);
+	root->right->left->left=new Node(16);
+	root->right->right=new Node(80);
+	int x=15;
+	
+	binarySearchTree* bst = new binarySearchTree();
+	
+	if(bst->searchRecursive(root,x))
+	    std::cout<<"Found";
+	else
+	    std::cout<<"Not Found";
 }
