@@ -186,7 +186,7 @@ Node* binarySearchTree::insertRecursive(Node* root, T key){
 
 int main() {
 	
-	Node *root=new Node(15);
+	Node* root=new Node(15);
 	root->left=new Node(5);
 	root->left->left=new Node(3);
 	root->right=new Node(20);
