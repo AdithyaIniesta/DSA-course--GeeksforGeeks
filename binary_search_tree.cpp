@@ -14,13 +14,58 @@ class Node{
 };
 
 class binarySearchTree{
-  public:
-    bool searchIterative(Node* root, int key);
-    bool searchRecursive(Node* root, int key);
-    
-    Node* insertIterative(Node* root, int key);
-    Node* insertRecursive(Node* root, int key);
+    private:
+        
+    public:
+        bool searchIterative(Node* root, int key);
+        bool searchRecursive(Node* root, int key);
+        Node* replaceNode(Node* root);
+        template <class T>
+        Node* binarySearchTree::deleteNode(Node* root, T key);
+        Node* insertIterative(Node* root, int key);
+        Node* insertRecursive(Node* root, int key);
 };
+
+Node* binarySearchTree::replaceNode(Node* root){
+    Node* curr = root->left;
+    while(curr!=NULL){
+        root = curr;
+        curr = curr->right;
+    }
+    return root;
+}
+
+template <class T>
+Node* binarySearchTree::deleteNode(Node* root, T key){
+    if(root== NULL){
+        return root;
+    }
+    else if(root->value > key){
+        deleteNode(root->left, key);
+    }
+    else if(root->value < key){
+        deleteNode(root->right, key);
+    }
+    else{
+        Node* temp;
+        if (root->left == NULL){
+            temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL){
+            temp = root->left;
+            delete root;
+            return temp;
+        }
+        else{
+            temp = replaceNode(root);
+            root->value = temp->value;
+            root->left = deleteNode(root->left, temp->value);
+            return root;
+        }
+    }
+}
 
 // search operation iterative method
 bool binarySearchTree::searchIterative(Node* root, int key){
@@ -56,48 +101,6 @@ bool binarySearchTree::searchRecursive(Node* root, int key){
         }
     }
 }
-
-Node* getSuccessor(Node *curr){
-    Node* next = curr->left;
-    while(next!=NULL){
-        curr = next;
-        next = next->right;
-    }
-    return curr;
-}
-
-Node *delNode(Node *root, int x){
-    if(root==NULL){
-        return root;
-    }
-    else if(root->key < x){
-        root->right = delNode(root->right, x);
-    }
-    else if(root->key > x){
-        root->left = delNode(root->left, x);
-    }
-    else{
-        Node* temp;
-        if(root->left == NULL){
-            temp = root->right;
-            delete root;
-            return temp;
-        }
-        else if(root->right == NULL){
-            temp = root->left;
-            delete root;
-            return temp;
-        }
-        else{
-            temp = getSuccessor(root);
-            root->key = temp->key;
-            root->right = delNode(root->right, root->key);
-            return root;
-        }
-    }
-} 
-
-
 
 // insert operation recursive
 Node* binarySearchTree::insertRecursive(Node* root, int key){
