@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 
+template<class T>
 class Node{
     public:
         int value;
         struct Node* left;
         struct Node* right;
         
-        Node(int value){
+        Node(T value){
             value = value;
             left = NULL;
             right = NULL;
@@ -17,14 +18,73 @@ class binarySearchTree{
     private:
         
     public:
-        bool searchIterative(Node* root, int key);
-        bool searchRecursive(Node* root, int key);
+        template <class T>
+        bool searchIterative(Node* root, T key);
+        template <class T>
+        bool searchRecursive(Node* root, T key);
         Node* replaceNode(Node* root);
+        void binarySearchTree::inOrder(Node* root);
+        void binarySearchTree::preOrder(Node* root);
+        void binarySearchTree::postOrder(Node* root);
+        void printLeafNodes(Node* root);
         template <class T>
         Node* binarySearchTree::deleteNode(Node* root, T key);
-        Node* insertIterative(Node* root, int key);
-        Node* insertRecursive(Node* root, int key);
+        template <class T>
+        std::vector<T> inOrder(Node* root)
+        template <class T>
+        Node* insertRecursive(Node* root, T key);
 };
+
+void printLeafNodes(Node* root){
+    if (root == NULL){
+        return;
+    }
+    else if(root->left ==NULL && root->right){
+        std::cout<< root->value <<"\t";
+    }
+    printLeafNodes(root->left);
+    printLeafNodes(root->right);
+}
+
+void binarySearchTree::inOrder(Node* root){
+    if(root ==  NULL){
+        return root;
+    }
+    inOrder(root->left);
+    std::cout << root->value <<"\t";
+    inOrder(root->right);
+}
+
+void binarySearchTree::preOrder(Node* root){
+    if(root == NULL){
+        return root;
+    }
+    std::cout<<root->value<<"\t";
+    preOrder(root->left);
+    preOrder(root->right);
+}
+
+void binarySearchTree::postOrder(Node* root){
+    if(root == NULL){
+        return root;
+    }
+    postOrder(root->left);
+    postOrder(root->right);
+    std::cout << root->value << "\t";
+}
+
+template <class T>
+std::vector<T> inOrder(Node* root){
+    std::vector<T> v1, v2;
+    if(root == NULL){
+        return v1;
+    }
+    v2 = inOrder(root->left);
+    v1.insert(v1.end(), v2.begin(), v2.end());
+    v2 = inOrder(root->right);
+    v1.insert(v1.end(), v2.begin(), v2.end());
+    return v1;
+}
 
 Node* binarySearchTree::replaceNode(Node* root){
     Node* curr = root->left;
@@ -68,7 +128,8 @@ Node* binarySearchTree::deleteNode(Node* root, T key){
 }
 
 // search operation iterative method
-bool binarySearchTree::searchIterative(Node* root, int key){
+template <class T>
+bool binarySearchTree::searchIterative(Node* root, T key){
     while(root!=NULL){
         std::cout << root->value;
         if(root->value == key){
@@ -85,7 +146,8 @@ bool binarySearchTree::searchIterative(Node* root, int key){
 }
 
 // serach operation recursive method
-bool binarySearchTree::searchRecursive(Node* root, int key){
+template <class T>
+bool binarySearchTree::searchRecursive(Node* root, T key){
     if(root!=NULL){
         return false;
     }
@@ -103,7 +165,8 @@ bool binarySearchTree::searchRecursive(Node* root, int key){
 }
 
 // insert operation recursive
-Node* binarySearchTree::insertRecursive(Node* root, int key){
+template <class T>
+Node* binarySearchTree::insertRecursive(Node* root, T key){
     if(root == NULL){
         root = new Node(key);
     }
@@ -133,9 +196,4 @@ int main() {
 	int x=15;
 	
 	binarySearchTree* bst = new binarySearchTree();
-	
-	if(bst->searchRecursive(root,x))
-	    std::cout<<"Found";
-	else
-	    std::cout<<"Not Found";
 }
