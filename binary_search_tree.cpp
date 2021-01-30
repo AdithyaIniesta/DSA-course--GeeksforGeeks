@@ -29,13 +29,27 @@ class binarySearchTree{
         void printLeafNodes(Node* root);
         template <class T>
         Node* binarySearchTree::deleteNode(Node* root, T key);
+        int countLeafNodes(Node*);
         template <class T>
         std::vector<T> inOrder(Node* root)
         template <class T>
         Node* insertRecursive(Node* root, T key);
 };
 
-void printLeafNodes(Node* root){
+int binarySearchTree::countLeafNodes(Node* root){
+    int count = 0;
+    if (root == NULL){
+        return count;
+    }
+    else if(root->left == NULL && root->right == NULL){
+        return count + 1;
+    }
+    count += countLeafNodes(root->left);
+    count +=countLeafNodes(root->right);
+    return count;
+}
+
+void binarySearchTree::printLeafNodes(Node* root){
     if (root == NULL){
         return;
     }
@@ -87,41 +101,40 @@ std::vector<T> inOrder(Node* root){
 }
 
 Node* binarySearchTree::replaceNode(Node* root){
-    Node* curr = root->left;
-    while(curr!=NULL){
-        root = curr;
+    curr = curr->left;
+    while(curr !=NULL && curr->right != NULL){
         curr = curr->right;
     }
-    return root;
+    return curr;
 }
 
 template <class T>
 Node* binarySearchTree::deleteNode(Node* root, T key){
-    if(root== NULL){
+   if(root == NULL){
         return root;
     }
-    else if(root->value > key){
-        deleteNode(root->left, key);
+    else if(root->key < x){
+        root->right = delNode(root->right, x);
     }
-    else if(root->value < key){
-        deleteNode(root->right, key);
+    else if(root->key > x){
+        root->left = delNode(root->left, x);
     }
     else{
         Node* temp;
-        if (root->left == NULL){
+        if(root->left == NULL){
             temp = root->right;
             delete root;
             return temp;
         }
-        else if (root->right == NULL){
+        if(root->right == NULL){
             temp = root->left;
             delete root;
             return temp;
         }
         else{
-            temp = replaceNode(root);
-            root->value = temp->value;
-            root->left = deleteNode(root->left, temp->value);
+            temp = getSuccessor(root);
+            root->key = temp->key;
+            root->left = delNode(root->left,root->key);
             return root;
         }
     }
@@ -197,3 +210,85 @@ int main() {
 	
 	binarySearchTree* bst = new binarySearchTree();
 }
+
+
+/*
+
+#include <bits/stdc++.h> 
+using namespace std; 
+
+struct Node{
+    int data;
+    Node* next;
+    Node(int x){
+        data=x;
+        next=NULL;
+    }
+};
+
+Node* traverseLinkedList(Node* root){
+    if(root == NULL){
+        return root;
+    }
+    
+    Node* temp = root;
+    while(temp!=NULL){
+        std::cout<<temp->data<<" --> ";
+        temp = temp->next;
+    }
+    std::cout<<"N"<<"\n";
+    return root;
+}
+
+template<class T>
+Node* pushBack(Node* root, T key){
+    
+    if(root == NULL){
+        return new Node(key);
+    }
+    
+    Node* temp = root;
+    Node* lastNode = new Node(key);
+    while(temp->next!= NULL){
+        temp = temp->next;
+    }
+    temp->next = lastNode;
+    temp = temp->next;
+    return root;
+}
+
+template<class T>
+Node* insertPosition(Node* root, int pos, T key){
+    Node* temp = root;
+    Node* new_node = new Node(key);
+    int count = 1;
+    while(count < pos-1){
+        temp = temp->next;
+        count = count + 1;
+    }
+    new_node->next = temp->next;
+    temp->next = new_node;
+    return root;
+}
+
+template<class T>
+Node* deleteNode(Node* root, T key){
+    
+}
+
+int main() 
+{ 
+	Node *head=new Node(10);
+	Node *temp1=new Node(20);
+	Node *temp2=new Node(30);
+	head->next=temp1;
+	temp1->next=temp2;
+	head = traverseLinkedList(head);
+	head = pushBack(head, 40);
+	head = insertPosition(head, 4,35);
+	head = traverseLinkedList(head);
+	return 0;
+} 
+
+
+*/
